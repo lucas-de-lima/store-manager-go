@@ -1,0 +1,83 @@
+squads:
+  - id: discovery-squad
+    name: Discovery Squad
+    mission: Build and maintain project understanding from specifications, code, and domain analysis
+    scope: Discovery, requirements analysis, domain modeling, project profiling
+    capabilities:
+      - Inspect legacy specifications and code
+      - Extract domain concepts and business rules
+      - Document actors, entities, workflows
+      - Identify risks and ambiguities
+      - Produce Project Profile
+    constraints:
+      - Read-only with respect to production code
+      - Must not modify architecture
+      - Must not implement features
+    tags: [discovery, requirements, analysis]
+    skills:
+      - project-discovery
+
+  - id: architecture-squad
+    name: Architecture Squad
+    mission: Own architectural decisions, pattern selection, and ADR authoring
+    scope: Architecture evaluation, deliberation, review, compliance
+    capabilities:
+      - Evaluate architecture candidates
+      - Select simplest viable architecture
+      - Produce Architecture Decision and ADR
+      - Review architecture decisions for evidence and fit
+      - Identify architecture evolution triggers
+    constraints:
+      - Must not implement code
+      - Must consider simplest viable candidate first
+    tags: [architecture, design, decisions]
+    skills:
+      - architecture-deliberation
+      - architecture-review
+
+  - id: go-engineering-squad
+    name: Go Engineering Squad
+    mission: Implement approved features following Vanilla Go best practices and layered architecture
+    scope: Server-side implementation, database work, API development
+    capabilities:
+      - Build net/http REST endpoints
+      - Implement handler/service/repository layers
+      - Write parameterized MySQL queries
+      - Implement input validation in service layer
+      - Create database migrations and seeds
+      - Follow Go idiomatic conventions (gofmt, naming, composition)
+    constraints:
+      - Vanilla Go only — no Gin, Echo, Fiber, Chi
+      - No external HTTP middleware dependencies
+      - All SQL queries must use parameterized inputs
+      - Must follow Go module conventions (go.mod, internal/)
+    tags: [engineering, backend, go, mysql]
+    skills:
+      - idiomatic-go
+      - go-project-structure
+      - go-http
+      - go-concurrency
+      - mysql-database
+      - api-design
+      - validation
+
+  - id: quality-squad
+    name: Quality Squad
+    mission: Ensure implementation correctness through automated testing and independent code review
+    scope: Unit testing, code review, coverage validation
+    capabilities:
+      - Write Go unit tests with testing/stdlib
+      - Mock SQL with go-sqlmock in repository tests
+      - Test handlers with net/http/httptest
+      - Review code for correctness, architecture alignment, and security
+      - Validate per-layer coverage targets
+      - Run go vet for static analysis
+    constraints:
+      - Repository tests must mock the database (go-sqlmock)
+      - Reviewer must not modify implementation
+      - Must verify acceptance criteria
+      - All tests must pass before merge
+    tags: [quality, testing, review]
+    skills:
+      - code-review
+      - go-testing

@@ -1,0 +1,41 @@
+# Project-specific policies
+
+policies:
+  - id: vanilla-go-constraint
+    description: No HTTP frameworks allowed — only net/http std library
+    rule: All HTTP handler code must use net/http. No imports from gin, echo, fiber, chi, or any third-party HTTP router.
+    enforcement: Automated via go vet custom check or manual review
+    severity: blocking
+
+  - id: sql-parameterization
+    description: All SQL queries must use parameterized inputs
+    rule: repository layer must use database/sql prepared statements. No string concatenation or Sprintf for SQL construction.
+    enforcement: Manual code review
+    severity: blocking
+
+  - id: test-coverage-minimum
+    description: Each layer must meet minimum coverage thresholds
+    rule: |
+      handler: 5% minimum (incremental to 60%)
+      service: 5% minimum (incremental to 60%)
+      repository: 5% minimum (incremental to 60%)
+    enforcement: go test -coverprofile=coverage.out; go tool cover -func=coverage.out
+    severity: blocking
+
+  - id: internal-package-scoping
+    description: Use Go internal/ package scoping for layered encapsulation
+    rule: handler, service, repository packages must reside under internal/ to enforce compiler-level boundary
+    enforcement: go vet or build check
+    severity: warning
+
+  - id: no-test-skip-without-justification
+    description: Tests must not use t.Skip() without a documented reason
+    rule: Any t.Skip() call must have a comment explaining why the test is disabled
+    enforcement: Manual code review
+    severity: warning
+
+  - id: database-prefix-convention
+    description: All SQL queries must prefix tables with StoreManager.
+    rule: SELECT/INSERT/UPDATE/DELETE queries must use StoreManager.table_name syntax
+    enforcement: Manual code review
+    severity: blocking

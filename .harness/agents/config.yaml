@@ -1,0 +1,47 @@
+agents:
+  orchestrator:
+    squad: orchestrator
+    authority: flow_coordination
+    inherits_skills: false
+    read_write: read_all + workflow_state
+    constraints:
+      - no_production_code_write
+
+  discovery-agent:
+    squad: discovery-squad
+    authority: project_inspection
+    inherits_skills: true
+    read_write: read_all
+    constraints:
+      - no_production_code_write
+      - no_architecture_decisions
+
+  architect:
+    squad: architecture-squad
+    authority: architecture_decisions
+    inherits_skills: true
+    read_write: read_all + harness_write
+    constraints:
+      - no_production_code_write
+      - adr_required_for_material_changes
+
+  go-engineer:
+    squad: go-engineering-squad
+    authority: implementation
+    inherits_skills: true
+    read_write: production_code + test_code + configuration
+    constraints:
+      - no_architecture_changes
+      - no_merge_permission
+      - go_vet_pass_required
+      - test_coverage_preserved
+
+  reviewer:
+    squad: quality-squad
+    authority: code_review
+    inherits_skills: true
+    read_write: read_all + review_comments
+    constraints:
+      - no_production_code_write
+      - no_merge_permission
+      - independent_from_implementer

@@ -1,0 +1,61 @@
+{
+  "schema_version": "1",
+  "harness_version": "0.2.0",
+  "base_harness_version": "0.31.0",
+  "project": {
+    "name": "Store Manager",
+    "repository": "store-manager",
+    "architecture_profile": "go-layered-rest-api",
+    "language": "go",
+    "runtime": "go >=1.21",
+    "database": "mysql",
+    "api_style": "rest",
+    "http_library": "net/http",
+    "database_driver": "go-sql-driver/mysql"
+  },
+  "agents": {
+    "selected": ["orchestrator", "discovery-agent", "architect", "go-engineer", "reviewer"],
+    "config": ".harness/agents/config.yaml"
+  },
+  "squads": {
+    "selected": ["discovery-squad", "architecture-squad", "go-engineering-squad", "quality-squad"],
+    "catalog": ".harness/squads/catalog.yaml"
+  },
+  "skills": {
+    "selected": [
+      "project-discovery",
+      "architecture-deliberation",
+      "architecture-review",
+      "code-review",
+      "idiomatic-go",
+      "go-project-structure",
+      "go-http",
+      "go-testing",
+      "go-concurrency",
+      "mysql-database",
+      "api-design",
+      "validation"
+    ],
+    "project_skills_dir": ".harness/skills/"
+  },
+  "workflows": {
+    "enabled": ["WF-001", "WF-002", "WF-003", "WF-004", "WF-005", "WF-006", "WF-007"],
+    "config": ".harness/workflows/project-workflows.yaml"
+  },
+  "tools": {
+    "selected": ["filesystem-read", "filesystem-write", "git-controlled", "github-read", "github-write-controlled", "go-build", "go-test", "go-vet", "mysql-inspect"],
+    "config": ".harness/tools/project-tools.yaml"
+  },
+  "policies": {
+    "config": ".harness/policies/project-policies.yaml"
+  },
+  "context": {
+    "domain": ".harness/context/domain.md",
+    "vocabulary": ".harness/context/vocabulary.md"
+  },
+  "hitl": {
+    "inherits_from": "base",
+    "mandatory_gates": ["HG-DISCOVERY", "HG-ARCHITECTURE", "HG-PLANNING", "HG-IMPLEMENTATION", "HG-REVIEW", "HG-RELEASE"],
+    "not_applicable": []
+  }
+}

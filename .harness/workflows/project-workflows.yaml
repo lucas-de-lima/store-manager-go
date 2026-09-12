@@ -1,0 +1,146 @@
+workflows:
+  - id: WF-001
+    name: Project Discovery
+    description: Discover project domain, extract requirements, produce Project Profile
+    squad: discovery-squad
+    agent: discovery-agent
+    skills: [project-discovery]
+    inputs:
+      - project_specification
+      - legacy_codebase
+    outputs:
+      - project_profile
+    state_machine:
+      - ready
+      - in_progress
+      - done
+    hitl_gates:
+      - HG-DISCOVERY
+
+  - id: WF-002
+    name: Architecture Deliberation
+    description: Evaluate architecture candidates, produce ADR and Architecture Decision
+    squad: architecture-squad
+    agent: architect
+    skills: [architecture-deliberation]
+    inputs:
+      - project_profile
+    outputs:
+      - architecture_decision
+      - adr
+    state_machine:
+      - ready
+      - in_progress
+      - done
+    hitl_gates:
+      - HG-ARCHITECTURE
+
+  - id: WF-003
+    name: Harness Generation
+    description: Generate or update the Dedicated Harness configuration
+    squad: discovery-squad
+    agent: discovery-agent
+    skills: [project-discovery]
+    inputs:
+      - project_profile
+      - architecture_decision
+    outputs:
+      - dedicated_harness
+    state_machine:
+      - ready
+      - in_progress
+      - done
+
+  - id: WF-004
+    name: Implementation Planning
+    description: Break down architecture into feature backlog items
+    squad: architecture-squad
+    agent: architect
+    skills: [architecture-deliberation]
+    inputs:
+      - architecture_decision
+    outputs:
+      - implementation_backlog
+    state_machine:
+      - ready
+      - in_progress
+      - done
+    hitl_gates:
+      - HG-PLANNING
+
+  - id: WF-005
+    name: Go Implementation
+    description: Implement features following Go layered architecture (handler/service/repository)
+    squad: go-engineering-squad
+    agent: go-engineer
+    skills:
+      - idiomatic-go
+      - go-project-structure
+      - go-http
+      - go-testing
+      - mysql-database
+      - validation
+    inputs:
+      - feature_specification
+      - architecture_decision
+    outputs:
+      - code_changes
+      - unit_tests
+      - coverage_report
+    quality_gates:
+      - go_vet_pass
+      - tests_pass
+      - coverage_meets_threshold
+    state_machine:
+      - ready
+      - in_progress
+      - in_review
+      - done
+    hitl_gates:
+      - HG-IMPLEMENTATION
+    retry:
+      max_attempts: 2
+
+  - id: WF-006
+    name: Code Review
+    description: Review implementation for correctness, architecture alignment, and quality
+    squad: quality-squad
+    agent: reviewer
+    skills:
+      - code-review
+      - go-testing
+    inputs:
+      - code_changes
+      - tests
+      - coverage_report
+    outputs:
+      - review_approval
+      - review_findings
+    quality_gates:
+      - architecture_compliance
+      - test_coverage_verified
+      - go_vet_verified
+      - sql_injection_check
+    state_machine:
+      - ready
+      - in_progress
+      - approved
+      - changes_requested
+    hitl_gates:
+      - HG-REVIEW
+    constraints:
+      - reviewer_must_not_be_implementer
+
+  - id: WF-007
+    name: Release
+    description: Tag and release a stable version
+    squad: quality-squad
+    agent: reviewer
+    skills: [code-review]
+    inputs:
+      - review_approval
+      - merged_code
+    outputs:
+      - release_tag
+    hitl_gates:
+      - HG-RELEASE

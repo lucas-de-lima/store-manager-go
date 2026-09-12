@@ -1,0 +1,50 @@
+schema_version: "1"
+harness_version: "0.2.0"
+base_harness_version: "0.31.0"
+project_repository: "store-manager"
+architecture_profile: "go-layered-rest-api"
+naming:
+  product: "Store Manager"
+  repository: "store-manager"
+selected_agents:
+  - orchestrator
+  - discovery-agent
+  - architect
+  - go-engineer
+  - reviewer
+selected_skills:
+  - project-discovery
+  - architecture-deliberation
+  - architecture-review
+  - code-review
+  - idiomatic-go
+  - go-project-structure
+  - go-http
+  - go-testing
+  - go-concurrency
+  - mysql-database
+  - api-design
+  - validation
+selected_tools:
+  - filesystem-read
+  - filesystem-write
+  - git-controlled
+  - github-read
+  - github-write-controlled
+  - go-build
+  - go-test
+  - go-vet
+  - mysql-inspect
+enabled_workflows:
+  - WF-001
+  - WF-002
+  - WF-003
+  - WF-004
+  - WF-005
+  - WF-006
+  - WF-007
+selected_squads:
+  - discovery-squad
+  - architecture-squad
+  - go-engineering-squad
+  - quality-squad

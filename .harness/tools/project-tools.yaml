@@ -1,0 +1,63 @@
+tools:
+  - id: filesystem-read
+    type: filesystem
+    mode: read
+    scope: project_root
+  - id: filesystem-write
+    type: filesystem
+    mode: write
+    scope: project_root
+    agents: [go-engineer]
+  - id: git-controlled
+    type: git
+    mode: read_write
+    scope: project_root
+    agents: [go-engineer]
+    constraints:
+      - no_force_push
+      - no_destructive_operations
+      - no_merge_directly
+  - id: github-read
+    type: github
+    mode: read
+    scope: repository
+  - id: github-write-controlled
+    type: github
+    mode: write
+    scope: repository
+    agents: [go-engineer]
+    operations:
+      - create_issue
+      - update_issue
+      - create_pr
+      - update_pr
+      - comment
+    forbidden:
+      - merge
+      - delete_branch
+      - force_push
+  - id: go-build
+    type: cli
+    command: go build
+    agents: [go-engineer]
+    description: Build the Go binary (go build -o bin/store-manager ./cmd/server)
+  - id: go-test
+    type: cli
+    command: go test
+    agents: [go-engineer, reviewer]
+    description: Run unit tests and coverage (go test -coverprofile=coverage.out ./...)
+    options:
+      - -v
+      - -coverprofile=coverage.out
+  - id: go-vet
+    type: cli
+    command: go vet
+    agents: [go-engineer, reviewer]
+    description: Static analysis (go vet ./...)
+  - id: mysql-inspect
+    type: cli
+    command: mysql
+    agents: [go-engineer]
+    description: Inspect MySQL database schema and data
+    constraints:
+      - read_only
